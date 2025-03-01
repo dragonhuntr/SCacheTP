@@ -37,11 +37,17 @@ class UploadSftpServer {
         // Custom authentication handler takes precedence if provided
         if (this.options.authHandler) {
           const authInfo = {
-            connection: { ip: client.ip },
+            connection: { ip: client._sock._peername.address }, // Get the IP address from the client socket
             username: ctx.username,
             password: ctx.method === 'password' ? ctx.password : null,
             method: ctx.method
           };
+
+          // If the client does not specify a method, suggest password authentication
+          if (ctx.method === 'none') {
+            if (this.options.debug) console.log(`Suggesting password authentication to client`);
+            return ctx.reject(['password']);
+          }
           
           try {
             // Call the custom auth handler
@@ -57,7 +63,7 @@ class UploadSftpServer {
             } else {
               // Authentication failed
               if (this.options.debug) console.log(`Authentication failed for ${ctx.username} via custom handler`);
-              ctx.reject();
+              ctx.reject(['password']); // Always reject with password authentication, client knows wrong credentials
             }
             return;
           } catch (error) {

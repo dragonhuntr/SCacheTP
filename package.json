@@ -1,6 +1,6 @@
 {
     "name": "scachetp",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Simple SFTP server that handles file uploads only",
     "main": "index.js",
     "types": "index.d.ts",
