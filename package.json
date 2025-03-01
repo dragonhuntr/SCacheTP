@@ -1,0 +1,21 @@
+{
+    "name": "scachetp",
+    "version": "1.0.0",
+    "description": "Simple SFTP server that handles file uploads only",
+    "main": "index.js",
+    "scripts": {
+      "start": "node examples/basic-server.js"
+    },
+    "keywords": [
+      "sftp",
+      "upload",
+      "ssh2",
+      "server"
+    ],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+      "ssh2": "^1.11.0",
+      "memory-stream": "^1.0.0"
+    }
+  }
