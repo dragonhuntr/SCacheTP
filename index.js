@@ -50,6 +50,8 @@ class UploadSftpServer {
             if (result === true || (result && typeof result === 'object')) {
               // Authentication successful
               if (this.options.debug) console.log(`User ${ctx.username} authenticated successfully via custom handler`);
+              // Set the current user in the filesystem
+              filesystem.setCurrentUser(ctx.username);
               ctx.accept();
               if (this.onAuthenticated) this.onAuthenticated(ctx.username);
             } else {
@@ -83,6 +85,8 @@ class UploadSftpServer {
 
         if (allowed) {
           if (this.options.debug) console.log(`User ${ctx.username} authenticated successfully`);
+          // Set the current user in the filesystem
+          filesystem.setCurrentUser(ctx.username);
           ctx.accept();
           if (this.onAuthenticated) this.onAuthenticated(ctx.username);
         } else {
@@ -140,7 +144,7 @@ class UploadSftpServer {
 
           // Handle WRITE requests
           sftp.on('WRITE', (reqid, handle, offset, data) => {
-            if (this.options.debug) console.log(`WRITE: ${handle.toString()}, ${data.length} bytes`);
+            if (this.options.debug) console.log(`WRITE: ${handle.toString()}, offset: ${offset}, ${data.length} bytes`);
             try {
               filesystem.writeData(handle, offset, data);
               sftp.status(reqid, STATUS_CODE.OK);
